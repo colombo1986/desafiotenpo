@@ -2,7 +2,7 @@ package org.tenpo.challenge.cvergara.service;
 
 
 import org.springframework.stereotype.Service;
-import org.tenpo.challenge.cvergara.client.RandomNumberClient;
+import org.tenpo.challenge.cvergara.httpclient.RandomNumberClient;
 import reactor.core.publisher.Mono;
 
 @Service

@@ -1,0 +1,33 @@
+spring:
+  r2dbc:
+    url: r2dbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:mydb}
+    username: ${DB_USER:myuser}
+    password: ${DB_PASSWORD:mypassword}
+
+  data:
+    r2dbc:
+      repositories:
+        enabled: true
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+
+  sql:
+   init:
+    mode: never # Deshabilita la inicialización automática de scripts SQL para evitar conflictos con Flyway
+
+  flyway:
+    enabled: true
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:mydb}
+    user: ${DB_USER:myuser}
+    password: ${DB_PASSWORD:mypassword}
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+logging:
+  level:
+    io.r2dbc: DEBUG
+    io.r2dbc.postgresql: DEBUG
+    org.springframework.data.r2dbc.core: DEBUG
+
+
