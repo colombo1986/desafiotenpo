@@ -24,6 +24,16 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
 
+resilience4j:
+  ratelimiter:
+    instances:
+      historyRateLimiter:
+        limit-for-period: 3          # Número máximo de solicitudes
+        limit-refresh-period: 60s     # Período de refresco (60 segundos)
+        timeout-duration: 0s          # Tiempo de espera para arrojar fallo
+
+
+
 logging:
   level:
     io.r2dbc: DEBUG

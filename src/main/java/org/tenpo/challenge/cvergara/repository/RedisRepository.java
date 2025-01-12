@@ -16,13 +16,33 @@ public class RedisRepository {
         this.redisTemplate = redisTemplate;
     }
 
+    /**
+     * Guarda el número con una TTL de 30 minutos en Redis.
+     */
     public Mono<Boolean> saveNumber(Integer number) {
-        // Guardamos el número como String
-        // "myNumber" es la key en Redis
-        // Añadimos un TTL de 30 minutos
+        String key = "randomNumber"; // clave fija
+        String value = String.valueOf(number);
         return redisTemplate
                 .opsForValue()
-                .set("myNumber", String.valueOf(number), Duration.ofMinutes(30));
+                .set(key, value, Duration.ofMinutes(30));
+    }
+
+    /**
+     * Obtiene el número guardado en Redis si existe.
+     * Retorna un Mono vacío si no existe o no hay valor.
+     */
+    public Mono<Integer> getLastSavedNumber() {
+        String key = "randomNumber";
+        return redisTemplate
+                .opsForValue()
+                .get(key)
+                .flatMap(value -> {
+                    try {
+                        return Mono.just(Integer.parseInt(value));
+                    } catch (NumberFormatException e) {
+                        return Mono.empty();
+                    }
+                });
     }
 
 }

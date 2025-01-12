@@ -4,5 +4,7 @@ CREATE TABLE IF NOT EXISTS history
     insertdate TIMESTAMP  DEFAULT CURRENT_TIMESTAMP,
     endpoint    VARCHAR(60) NOT NULL,
     parameters  VARCHAR(60) NOT NULL,
+    response_status INTEGER,
+    response_body VARCHAR(100),
     CONSTRAINT pk_history PRIMARY KEY (id)
 );
