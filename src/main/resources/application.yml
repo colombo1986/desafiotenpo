@@ -1,4 +1,16 @@
+server:
+  port: 8080
+
+springdoc:
+  show-actuator: true
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+
 spring:
+  application:
+    name: cvergara
   r2dbc:
     url: r2dbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:mydb}
     username: ${DB_USER:myuser}
@@ -24,6 +36,7 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
 
+
 resilience4j:
   ratelimiter:
     instances:
@@ -36,8 +49,8 @@ resilience4j:
 
 logging:
   level:
-    io.r2dbc: DEBUG
-    io.r2dbc.postgresql: DEBUG
-    org.springframework.data.r2dbc.core: DEBUG
+    io.r2dbc: INFO
+    io.r2dbc.postgresql: INFO
+    org.springframework.data.r2dbc.core: INFO
 
 

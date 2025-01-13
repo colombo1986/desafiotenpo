@@ -4,9 +4,9 @@ import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.tenpo.challenge.cvergara.exception.TooManyRequestsException;
-import org.tenpo.challenge.cvergara.model.dto.PaginatedResponse;
-import org.tenpo.challenge.cvergara.model.entity.History;
+
+import org.tenpo.challenge.cvergara.model.dto.ResponseDto;
+
 import org.tenpo.challenge.cvergara.service.AddService;
 import reactor.core.publisher.Mono;
 
@@ -23,9 +23,31 @@ public class AddController {
 
     @PostMapping("/add")
     @RateLimiter(name = "addRateLimiter", fallbackMethod = "rateLimiterFallback")
-    public Mono<Integer> add(@RequestParam Integer num1, @RequestParam Integer num2) {
+    public Mono<ResponseDto> add(@RequestParam Integer num1, @RequestParam Integer num2) {
 
-        return addService.addNumbers(num1, num2);
+        if (num1 == null || num2 == null || num1 == 0 || num2 == 0) {
+            return Mono.just(new ResponseDto(
+                    "400",
+                    "Los parámetros num1 y num2 no pueden ser nulos ni ceros.",
+                    null
+            ));
+        }
+
+        // Llamar al servicio y construir la respuesta en caso de éxito
+        return addService.addNumbers(num1, num2)
+                .map(result -> new ResponseDto(
+                        "200",
+                        "Operación exitosa",
+                        result
+                ))
+                .onErrorResume(error -> {
+                    // Manejar errores inesperados
+                    return Mono.just(new ResponseDto(
+                            "500",
+                            "Error interno del servidor: " + error.getMessage(),
+                            null
+                    ));
+                });
     }
 
     /**
@@ -36,8 +58,12 @@ public class AddController {
      * @param ex   La excepción lanzada por el Rate Limiter.
      * @return Mono<Integer> con un mensaje de error.
      */
-    public Mono<Integer> rateLimiterFallback(Integer num1, Integer num2, Throwable ex) {
-        return Mono.error(new TooManyRequestsException("Se ha excedido el número máximo de solicitudes permitidas. Por favor, intenta nuevamente más tarde."));
+    public Mono<ResponseDto> rateLimiterFallback(Integer num1, Integer num2, Throwable ex) {
+        return Mono.just(new ResponseDto(
+                "429",
+                "Se ha excedido el límite de solicitudes. Intente nuevamente más tarde.",
+                null
+        ));
     }
 
 }
