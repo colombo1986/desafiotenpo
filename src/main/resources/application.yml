@@ -27,17 +27,19 @@ spring:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
 
+  flyway:
+    enabled: true
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/mydb}
+    user: ${SPRING_DATASOURCE_USERNAME:myuser}
+    password:  ${SPRING_DATASOURCE_PASSWORD:mypassword}
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
   sql:
    init:
     mode: never # Deshabilita la inicialización automática de scripts SQL para evitar conflictos con Flyway
 
-  flyway:
-    enabled: true
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:mydb}
-    user: ${DB_USER:myuser}
-    password: ${DB_PASSWORD:mypassword}
-    locations: classpath:db/migration
-    baseline-on-migrate: true
+
 
 
 resilience4j:
