@@ -1,0 +1,26 @@
+spring:
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/testdb
+    username: testuser
+    password: testpassword
+
+  data:
+    r2dbc:
+      repositories:
+        enabled: true
+
+
+resilience4j:
+  ratelimiter:
+    instances:
+      addRateLimiter:
+        limit-for-period: 3
+        limit-refresh-period: 1m
+        timeout-duration: 1s
+
+
+logging:
+  level:
+    root: INFO
+    org.springframework: DEBUG
+    io.github.resilience4j: TRACE
